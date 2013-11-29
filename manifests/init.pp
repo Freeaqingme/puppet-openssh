@@ -238,7 +238,8 @@ class openssh (
   $log_dir             = params_lookup( 'log_dir' ),
   $log_file            = params_lookup( 'log_file' ),
   $port                = params_lookup( 'port' ),
-  $protocol            = params_lookup( 'protocol' )
+  $protocol            = params_lookup( 'protocol' ),
+  $client_config_template = params_lookup( 'client_config_template ' )
   ) inherits openssh::params {
 
   $bool_source_dir_purge=any2bool($source_dir_purge)
@@ -370,6 +371,17 @@ class openssh (
       purge   => $openssh::bool_source_dir_purge,
       replace => $openssh::manage_file_replace,
       audit   => $openssh::manage_audit,
+    }
+  }
+
+  if $client_config_template != ''{
+    file { 'openssh.client.conf':
+      ensure   => present,
+      path     => "${openssh::config_dir}/openssh.conf",
+      require  => $require_package,
+      replace  => $openssh::manage_file_replace,
+      audit    => $openssh::manage_audit,
+      content  => template($client_config_template)
     }
   }
 
