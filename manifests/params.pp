@@ -17,16 +17,15 @@ class openssh::params {
   ### Application related parameters
 
   $package = $::operatingsystem ? {
-    /(?i:SLES|OpenSuSE)/   => 'openssh',
-    /(?i:OpenBSD|FreeBSD)/ => '',
-    /(?i:Solaris)/         => '',
-    default                => 'openssh-server',
+    /(?i:SLES|OpenSuSE)/           => 'openssh',
+    /(?i:OpenBSD|FreeBSD|Solaris)/ => '', # part of base install
+    default                        => 'openssh-server',
   }
 
   $service = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => 'ssh',
-    /(?i:Solaris)/            => 'ssh',
-    default                   => 'sshd',
+    /(?i:Debian|Ubuntu|Mint)/  => 'ssh',
+    /(?i:Solaris|OpenIndiana)/ => 'ssh',
+    default                    => 'sshd',
   }
 
   $service_status = $::operatingsystem ? {
